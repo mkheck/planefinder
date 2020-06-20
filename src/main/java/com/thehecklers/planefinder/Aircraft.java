@@ -19,7 +19,7 @@ import java.time.Instant;
 public class Aircraft {
     @Id
     @GeneratedValue
-    private String id;
+    private Long id;
     private String callsign, squawk, reg, flightno, route, type, category;
 
     private int altitude, heading, speed;
