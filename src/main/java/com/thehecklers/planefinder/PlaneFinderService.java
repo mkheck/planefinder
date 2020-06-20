@@ -24,6 +24,8 @@ public class PlaneFinderService {
     }
 
     public Iterable<Aircraft> getAircraft() throws IOException {
+        repo.deleteAll();
+
         JsonNode aircraftNodes = om.readTree(acURL)
                 .get("aircraft");
 
