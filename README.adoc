@@ -1,0 +1,17 @@
+= PlaneFinder: Building a REST API around output from my hosted PlaneFinder.net remote node
+
+== Maintainer
+
+* Mark Heckler
+* mailto:mark@thehecklers.com[mark@thehecklers.com]
+* https://twitter.com/mkheck[@mkheck on Twitter]
+
+== Purpose
+
+To provide a streamlined REST API of data captured by a local (remote) PlaneFinder.net node for consumption by other applications/services.
+
+PlaneFinder.net is a service that, with the help of numerous small devices located around the globe, captures and displays aviation activity via transponders/ADSB-out/MLAT. This makes it useful at a macro level, but also useful (and just generally fascinating) at a micro level as well.
+
+== Notes
+
+*_Star+watch this repo for updates!_*
