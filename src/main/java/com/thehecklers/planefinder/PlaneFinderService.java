@@ -25,14 +25,19 @@ public class PlaneFinderService {
     }
 
 //    public Iterable<Aircraft> getAircraft() throws IOException {
-    public Flux<Aircraft> getAircraft() throws IOException {
+    public Flux<Aircraft> getAircraft() {
         repo.deleteAll();
 
-        JsonNode aircraftNodes = om.readTree(acURL)
-                .get("aircraft");
+        JsonNode aircraftNodes = null;
+        try {
+            aircraftNodes = om.readTree(acURL)
+                    .get("aircraft");
 
-        aircraftNodes.iterator()
-                .forEachRemaining(this::saveAircraft);
+            aircraftNodes.iterator()
+                    .forEachRemaining(this::saveAircraft);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return repo.findAll();
     }
