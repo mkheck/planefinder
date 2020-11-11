@@ -9,6 +9,8 @@ import reactor.core.publisher.Flux;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class PlaneFinderService {
@@ -26,29 +28,27 @@ public class PlaneFinderService {
 
 //    public Iterable<Aircraft> getAircraft() throws IOException {
     public Flux<Aircraft> getAircraft() {
-        repo.deleteAll();
+        List<Aircraft> positions = new ArrayList<>();
 
         JsonNode aircraftNodes = null;
         try {
             aircraftNodes = om.readTree(acURL)
                     .get("aircraft");
 
-            aircraftNodes.iterator()
-                    .forEachRemaining(this::saveAircraft);
+            aircraftNodes.iterator().forEachRemaining(node -> {
+                try {
+                    positions.add(om.treeToValue(node, Aircraft.class));
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return repo.findAll();
-    }
-
-    private void saveAircraft(JsonNode node) {
-        Aircraft ac = null;
-        try {
-            ac = om.treeToValue(node, Aircraft.class);
-            repo.save(ac).subscribe();  // For RS, must subscribe!
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        return repo.deleteAll()
+                .thenMany(repo.saveAll(positions))
+                .thenMany(repo.findAll());
     }
 }
+
