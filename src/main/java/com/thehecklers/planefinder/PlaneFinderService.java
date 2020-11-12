@@ -27,7 +27,7 @@ public class PlaneFinderService {
         om = new ObjectMapper();
     }
 
-//    public Iterable<Aircraft> getAircraft() throws IOException {
+    //    public Iterable<Aircraft> getAircraft() throws IOException {
     public Flux<Aircraft> getAircraft() {
         List<Aircraft> positions = new ArrayList<>();
 
@@ -52,36 +52,27 @@ public class PlaneFinderService {
                     .thenMany(repo.saveAll(positions))
                     .thenMany(repo.findAll());
         } else {
-            return repo.deleteAll()
-                    .thenMany(saveSamplePositions())
-                    .thenMany(repo.findAll());
+        return repo.deleteAll()
+                .thenMany(saveSamplePositions())
+                .thenMany(repo.findAll());
         }
     }
 
     private Flux<Aircraft> saveSamplePositions() {
         // Spring Airlines flight 001 en route, flying STL to SFO, at 30000' currently over Kansas City
-        var ac1 = new Aircraft(1L, "SAL001", "sqwk", "N12345", "SAL001",
-                "STL-SFO", "LJ", "ct",
-                30000, 280, 440, 0, 0,
-                39.2979849, -94.71921, 0D, 0D, 0D,
-                true, false,
-                Instant.now(), Instant.now(), Instant.now());
+        var ac1 = new Aircraft("SAL001", "N12345", "SAL001", "LJ",
+                30000, 280, 440,
+                39.2979849, -94.71921);
 
         // Spring Airlines flight 002 en route, flying SFO to STL, at 40000' currently over Denver
-        var ac2 = new Aircraft(2L, "SAL002", "sqwk", "N54321", "SAL002",
-                "SFO-STL", "LJ", "ct",
-                40000, 65, 440, 0, 0,
-                39.8560963, -104.6759263, 0D, 0D, 0D,
-                true, false,
-                Instant.now(), Instant.now(), Instant.now());
+        var ac2 = new Aircraft("SAL002", "N54321", "SAL002", "LJ",
+                40000, 65, 440,
+                39.8560963, -104.6759263);
 
         // Spring Airlines flight 002 en route, flying SFO to STL, at 40000' currently just past DEN
-        var ac3 = new Aircraft(3L, "SAL002", "sqwk", "N54321", "SAL002",
-                "SFO-STL", "LJ", "ct",
-                40000, 65, 440, 0, 0,
-                39.8412964, -105.0048267, 0D, 0D, 0D,
-                true, false,
-                Instant.now(), Instant.now(), Instant.now());
+        var ac3 = new Aircraft("SAL002", "N54321", "SAL002", "LJ",
+                40000, 65, 440,
+                39.8412964, -105.0048267);
 
         return repo.saveAll(List.of(ac1, ac2, ac3));
     }
