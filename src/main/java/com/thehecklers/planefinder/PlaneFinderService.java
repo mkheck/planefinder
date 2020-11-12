@@ -9,6 +9,7 @@ import reactor.core.publisher.Flux;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,9 +47,43 @@ public class PlaneFinderService {
             e.printStackTrace();
         }
 
-        return repo.deleteAll()
-                .thenMany(repo.saveAll(positions))
-                .thenMany(repo.findAll());
+        if (positions.size() > 0) {
+            return repo.deleteAll()
+                    .thenMany(repo.saveAll(positions))
+                    .thenMany(repo.findAll());
+        } else {
+            return repo.deleteAll()
+                    .thenMany(saveSamplePositions())
+                    .thenMany(repo.findAll());
+        }
+    }
+
+    private Flux<Aircraft> saveSamplePositions() {
+        // Spring Airlines flight 001 en route, flying STL to SFO, at 30000' currently over Kansas City
+        var ac1 = new Aircraft(1L, "SAL001", "sqwk", "N12345", "SAL001",
+                "STL-SFO", "LJ", "ct",
+                30000, 280, 440, 0, 0,
+                39.2979849, -94.71921, 0D, 0D, 0D,
+                true, false,
+                Instant.now(), Instant.now(), Instant.now());
+
+        // Spring Airlines flight 002 en route, flying SFO to STL, at 40000' currently over Denver
+        var ac2 = new Aircraft(2L, "SAL002", "sqwk", "N54321", "SAL002",
+                "SFO-STL", "LJ", "ct",
+                40000, 65, 440, 0, 0,
+                39.8560963, -104.6759263, 0D, 0D, 0D,
+                true, false,
+                Instant.now(), Instant.now(), Instant.now());
+
+        // Spring Airlines flight 002 en route, flying SFO to STL, at 40000' currently just past DEN
+        var ac3 = new Aircraft(3L, "SAL002", "sqwk", "N54321", "SAL002",
+                "SFO-STL", "LJ", "ct",
+                40000, 65, 440, 0, 0,
+                39.8412964, -105.0048267, 0D, 0D, 0D,
+                true, false,
+                Instant.now(), Instant.now(), Instant.now());
+
+        return repo.saveAll(List.of(ac1, ac2, ac3));
     }
 }
 
