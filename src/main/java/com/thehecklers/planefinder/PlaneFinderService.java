@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
@@ -22,7 +23,7 @@ public class PlaneFinderService {
     public PlaneFinderService(PlaneRepository repo) {
         this.repo = repo;
 
-        acURL = new URL("http://192.168.1.193/ajax/aircraft");
+        acURL = new URL("http://192.168.1.139/ajax/aircraft");
         om = new ObjectMapper();
     }
 
@@ -43,17 +44,23 @@ public class PlaneFinderService {
                 }
             });
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("\n>>> IO Exception: " + e.getLocalizedMessage() +
+                    ", generating and providing sample data.\n");
+            return saveSamplePositions();
         }
 
         if (positions.size() > 0) {
+            positions.forEach(System.out::println);
+
             return repo.deleteAll()
-                    .thenMany(repo.saveAll(positions))
-                    .thenMany(repo.findAll());
+                    .thenMany(repo.saveAll(positions));
+            //.thenMany(repo.findAll());
         } else {
-        return repo.deleteAll()
-                .thenMany(saveSamplePositions())
-                .thenMany(repo.findAll());
+            System.out.println("\n>>> No positions to report, generating and providing sample data.\n");
+
+            return repo.deleteAll()
+                    .thenMany(saveSamplePositions());
+            //.thenMany(repo.findAll());
         }
     }
 
@@ -73,7 +80,8 @@ public class PlaneFinderService {
                 40000, 65, 440,
                 39.8412964, -105.0048267);
 
-        return repo.saveAll(List.of(ac1, ac2, ac3));
+        //return repo.saveAll(Flux.just(ac1, ac2, ac3));
+        return Flux.just(ac1, ac2, ac3).flatMap(repo::save);
     }
 }
 

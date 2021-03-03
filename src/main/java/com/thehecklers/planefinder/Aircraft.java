@@ -7,18 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
-//import javax.persistence.Entity;
-//import javax.persistence.GeneratedValue;
-//import javax.persistence.Id;
 import java.time.Instant;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-//@Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Aircraft {
-    //    @GeneratedValue
     @Id
     private Long id;
     private String callsign, squawk, reg, flightno, route, type, category;
