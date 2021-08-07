@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Created-By: Maven Jar Plugin 3.2.0
+Build-Jdk-Spec: 15
+Implementation-Title: planefinder
+Implementation-Version: 0.0.1-SNAPSHOT
+Main-Class: org.springframework.boot.loader.JarLauncher
+Start-Class: com.thehecklers.planefinder.PlanefinderApplication
+Spring-Boot-Version: 2.4.0
+Spring-Boot-Classes: BOOT-INF/classes/
+Spring-Boot-Lib: BOOT-INF/lib/
+Spring-Boot-Classpath-Index: BOOT-INF/classpath.idx
+Spring-Boot-Layers-Index: BOOT-INF/layers.idx
+

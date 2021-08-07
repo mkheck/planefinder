@@ -8,7 +8,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
-import java.time.Duration;
 
 @Controller
 public class PlaneController {
@@ -27,8 +26,6 @@ public class PlaneController {
     @MessageMapping("acstream")
     public Flux<Aircraft> getCurrentACStream(Mono<?> someMono) throws IOException {
         return someMono.doOnNext(mo -> System.out.println(mo))
-                .thenMany(pfService.getAircraft().concatWith(
-                        Flux.interval(Duration.ofSeconds(1))
-                                .flatMap(l -> pfService.getAircraft())));
+                .thenMany(pfService.getAircraft());
     }
 }
