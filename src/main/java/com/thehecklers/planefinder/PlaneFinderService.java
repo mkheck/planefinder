@@ -70,7 +70,8 @@ public class PlaneFinderService {
         final Random rnd = new Random();
 
         return Flux.range(1, rnd.nextInt(10))
-                .map(i -> generator.generate());
+                .map(i -> generator.generate())
+                .flatMap(repo::save);
     }
 }
 
