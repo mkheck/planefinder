@@ -48,7 +48,6 @@ public class PlaneFinderService {
         } catch (IOException e) {
             System.out.println("\n>>> IO Exception: " + e.getLocalizedMessage() +
                     ", generating and providing sample data.\n");
-//            return saveSamplePositions();
             return repo.deleteAll()
                     .thenMany(saveSamplePositions());
         }
@@ -58,13 +57,11 @@ public class PlaneFinderService {
 
             return repo.deleteAll()
                     .thenMany(repo.saveAll(positions));
-            //.thenMany(repo.findAll());
         } else {
             System.out.println("\n>>> No positions to report, generating and providing sample data.\n");
 
             return repo.deleteAll()
                     .thenMany(saveSamplePositions());
-            //.thenMany(repo.findAll());
         }
     }
 
