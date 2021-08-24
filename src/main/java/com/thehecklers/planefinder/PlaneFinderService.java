@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -29,6 +30,11 @@ public class PlaneFinderService {
         acConn = (HttpURLConnection) (new URL("http://192.168.1.139/ajax/aircraft")).openConnection();
         acConn.setConnectTimeout(1000);
         om = new ObjectMapper();
+    }
+
+    @PreDestroy
+    void shutdown() {
+        acConn.disconnect();
     }
 
     //    public Iterable<Aircraft> getAircraft() throws IOException {
