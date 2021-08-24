@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.Random;
 public class PlaneFinderService {
     private final PlaneRepository repo;
     private final FlightGenerator generator;
-    private URL acURL;
+    private HttpURLConnection acConn;
     private final ObjectMapper om;
 
     @SneakyThrows
@@ -25,7 +26,8 @@ public class PlaneFinderService {
         this.repo = repo;
         this.generator = generator;
 
-        acURL = new URL("http://192.168.1.139/ajax/aircraft");
+        acConn = (HttpURLConnection) (new URL("http://192.168.1.139/ajax/aircraft")).openConnection();
+        acConn.setConnectTimeout(1000);
         om = new ObjectMapper();
     }
 
@@ -35,7 +37,7 @@ public class PlaneFinderService {
 
         JsonNode aircraftNodes = null;
         try {
-            aircraftNodes = om.readTree(acURL)
+            aircraftNodes = om.readTree(acConn.getInputStream())
                     .get("aircraft");
 
             aircraftNodes.iterator().forEachRemaining(node -> {
