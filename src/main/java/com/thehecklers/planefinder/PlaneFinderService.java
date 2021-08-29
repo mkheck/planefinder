@@ -27,23 +27,18 @@ public class PlaneFinderService {
         this.repo = repo;
         this.generator = generator;
 
-        acConn = (HttpURLConnection) (new URL("http://192.168.1.139/ajax/aircraft")).openConnection();
-        acConn.setConnectTimeout(1000);
         om = new ObjectMapper();
-    }
-
-    @PreDestroy
-    void shutdown() {
-        acConn.disconnect();
     }
 
     //    public Iterable<Aircraft> getAircraft() throws IOException {
     public Flux<Aircraft> getAircraft() {
         List<Aircraft> positions = new ArrayList<>();
 
-        JsonNode aircraftNodes = null;
         try {
-            aircraftNodes = om.readTree(acConn.getInputStream())
+            acConn = (HttpURLConnection) new URL("http://192.168.1.139/ajax/aircraft").openConnection();
+            acConn.setConnectTimeout(1000);
+
+            JsonNode aircraftNodes = om.readTree(acConn.getInputStream())
                     .get("aircraft");
 
             aircraftNodes.iterator().forEachRemaining(node -> {
@@ -54,6 +49,7 @@ public class PlaneFinderService {
                 }
             });
         } catch (IOException e) {
+            //e.printStackTrace();
             System.out.println("\n>>> IO Exception: " + e.getLocalizedMessage() +
                     ", generating and providing sample data.\n");
             return repo.deleteAll()
