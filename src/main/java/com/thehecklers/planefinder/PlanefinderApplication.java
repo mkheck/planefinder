@@ -18,7 +18,7 @@ public class PlanefinderApplication {
 
 	public static void main(String[] args) {
 		//ReactorDebugAgent.init();
-		Hooks.onErrorDropped(e -> System.out.println("<< Client disconnected >>"));
+		Hooks.onErrorDropped(e -> System.out.println("\n<< Client disconnected >>\n"));
 		SpringApplication.run(PlanefinderApplication.class, args);
 	}
 
